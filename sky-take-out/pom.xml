@@ -69,6 +69,7 @@
                 <version>${pagehelper}</version>
             </dependency>
 
+<!--            Knife4j是一个Swagger的增强实现，旨在帮助开发者更好地管理和使用Swagger文档。-->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-spring-boot-starter</artifactId>
