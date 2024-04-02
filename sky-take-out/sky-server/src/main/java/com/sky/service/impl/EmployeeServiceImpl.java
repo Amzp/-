@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
@@ -70,8 +71,8 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public void save(EmployeeDTO employeeDTO) {
+        System.out.println("当前线程的id：" + Thread.currentThread().getId());
         Employee employee = new Employee();
-
 
         // 对象属性拷贝
         /* Spring Framework中的一个便捷方法，自动通过反射机制获取源对象和目标对象的属性，并将对应的属性值进行复制。
@@ -91,9 +92,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setUpdateTime(LocalDateTime.now());
 
         // 设置当前记录创建人id和修改人id
-        // TODO 这里需要获取当前登录的用户id，暂时写死
-        employee.setCreateUser(10L);
-        employee.setUpdateUser(10L);
+        /*这行代码从 BaseContext 中获取当前线程的员工ID，并将其设置为 employee 对象的创建用户。
+        这种操作通常用于在记录数据时跟踪数据的创建者或最后修改者。
+        假设 employee 类型的对象具有一个名为 createUser 的属性，用于表示该员工记录的创建者。
+        在这里，通过调用 BaseContext.getCurrentId() 方法，可以获取当前线程相关联的员工ID，并将其设置为 employee 对象的创建用户。
+         这种模式通常用于记录数据库中数据的创建和修改信息，以便追踪数据变更的来源或责任人。*/
+        employee.setCreateUser(BaseContext.getCurrentId());
+        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
 
