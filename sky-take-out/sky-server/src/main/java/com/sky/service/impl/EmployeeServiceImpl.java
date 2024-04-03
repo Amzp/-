@@ -92,18 +92,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 设置密码，默认密码123456，加密后存入数据库
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
-        // 设置当前记录的创建时间和修改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-
-        // 设置当前记录创建人id和修改人id
-        /*这行代码从 BaseContext 中获取当前线程的员工ID，并将其设置为 employee 对象的创建用户。
-        这种操作通常用于在记录数据时跟踪数据的创建者或最后修改者。
-        假设 employee 类型的对象具有一个名为 createUser 的属性，用于表示该员工记录的创建者。
-        在这里，通过调用 BaseContext.getCurrentId() 方法，可以获取当前线程相关联的员工ID，并将其设置为 employee 对象的创建用户。
-         这种模式通常用于记录数据库中数据的创建和修改信息，以便追踪数据变更的来源或责任人。*/
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        // 设置当前记录的创建时间和修改时间
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
+//
+//        // 设置当前记录创建人id和修改人id
+//        /*这行代码从 BaseContext 中获取当前线程的员工ID，并将其设置为 employee 对象的创建用户。
+//        这种操作通常用于在记录数据时跟踪数据的创建者或最后修改者。
+//        假设 employee 类型的对象具有一个名为 createUser 的属性，用于表示该员工记录的创建者。
+//        在这里，通过调用 BaseContext.getCurrentId() 方法，可以获取当前线程相关联的员工ID，并将其设置为 employee 对象的创建用户。
+//         这种模式通常用于记录数据库中数据的创建和修改信息，以便追踪数据变更的来源或责任人。*/
+//        employee.setCreateUser(BaseContext.getCurrentId());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
     }
@@ -164,8 +164,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
 
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId()); // 获取当前线程的ID
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(BaseContext.getCurrentId()); // 获取当前线程的ID
 
         employeeMapper.update(employee); // 更新员工信息
     }
