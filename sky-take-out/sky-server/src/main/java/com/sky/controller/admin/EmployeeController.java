@@ -111,4 +111,23 @@ public class EmployeeController {
         return Result.success(pageResult);
     }
 
+    /**
+     * 启用或禁用员工账号
+     *
+     * @param status 状态 0：禁用 1：启用
+     * @param id     员工id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    /*为什么用Post请求？
+    * 通常，处理像“启用或禁用员工账号”这样的操作时，应该使用POST或者PUT请求，因为这类操作涉及到对资源的修改。
+    * 从语义上讲，GET请求应该用于获取资源的信息，而POST或PUT请求应该用于修改资源的状态。*/
+    @ApiOperation(value = "启用或禁用员工账号")
+    public Result startOrStop(@PathVariable("status") Integer status,
+                              @RequestParam("id") Long id){
+        log.info("启用或禁用员工账号：status={}, id={}", status, id);
+        // 调用service层方法，修改员工状态
+        employeeService.startOrStop(status, id);
+        return Result.success();
+    }
 }
