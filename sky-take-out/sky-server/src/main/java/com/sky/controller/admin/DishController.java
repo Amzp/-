@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * ClassName: DishController
  * Package: com.sky.controller.admin
@@ -63,5 +65,21 @@ public class DishController {
         PageResult pageResult = dishService.pageQueryDish(dishPageQueryDTO);
 
         return Result.success(pageResult);
+    }
+
+    /**
+     * 根据ids批量删除菜品
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    @ApiOperation(value = "批量删除菜品", notes = "删除菜品")
+    public Result deleteDish(@RequestParam List<Long> ids){ // Spring MVC 会自动将这个以逗号分隔的字符串转换为 Long 类型的列表
+        log.info("批量删除菜品：{}", ids);
+
+        // 调用业务逻辑层方法，批量删除菜品及其口味
+        dishService.deleteDishBatch(ids);
+
+        return Result.success();
     }
 }
