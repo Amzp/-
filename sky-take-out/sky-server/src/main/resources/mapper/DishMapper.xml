@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.DishMapper">
+    <!--useGeneratedKeys="true"：此属性告诉MyBatis执行这个插入操作后，需要获取数据库自动生成的键值。
+        keyProperty="id"：指定MyBatis应该将获取到的自动生成键值设置到你的Java对象的哪个属性中。在这个例子中，将自动生成的键值设置到id属性中。
+        这种方式在插入数据后能够立即获取并使用自动生成的ID是非常有用的，特别是当你需要使用这个新生成的ID做进一步操作（如插入其他表记录时作为外键使用）时。-->
+    <insert id="insertDish" useGeneratedKeys="true" keyProperty="id">
+        insert into sky_take_out.dish
+        (name, category_id, price, image, description, status, create_time, update_time, create_user, update_user)
+        values (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{status}, #{createTime}, #{updateTime},
+                #{createUser}, #{updateUser})
+    </insert>
+</mapper>

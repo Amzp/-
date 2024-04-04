@@ -50,7 +50,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
-            log.info("当前员工id：", empId);
+            log.info("当前员工id：{}", empId);
             /*将从 JWT 声明中获得的员工ID（empId）设置到 BaseContext 的线程局部变量中。
             这样就将员工ID与当前线程相关联，以便后续的代码可以方便地访问和使用这个员工ID。
             这种模式在 Web 应用程序中常常用于跟踪当前登录用户的会话信息或权限信息等*/
