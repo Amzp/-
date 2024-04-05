@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 public class SetmealDTO implements Serializable {
 
+    // 套餐id-主键
     private Long id;
 
     //分类id

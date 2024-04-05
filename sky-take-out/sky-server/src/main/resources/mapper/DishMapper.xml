@@ -10,6 +10,7 @@
         values (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{status}, #{createTime}, #{updateTime},
                 #{createUser}, #{updateUser})
     </insert>
+
     <select id="pageQueryDish" resultType="com.sky.vo.DishVO">
         select d.*,c.name as categoryName
         from dish as d left outer join category as c
@@ -27,6 +28,7 @@
         </where>
         order by d.create_time desc
     </select>
+
 
     <delete id="deleteDishByIds">
         delete

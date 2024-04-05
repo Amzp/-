@@ -45,6 +45,14 @@ public interface DishMapper {
     Dish getById(Long id);
 
     /**
+     * 根据分类id查询菜品数据
+     * @param categoryId
+     * @return
+     */
+    @Select("select * from dish where category_id = #{categoryId}")
+    List<Dish> getByCategoryId(Long categoryId);
+
+    /**
      * 根据主键id删除菜品
      * @param id
      */
@@ -63,4 +71,5 @@ public interface DishMapper {
      */
     @AutoFill(value = OperationType.UPDATE) // 公共字段填充
     void updateDish(Dish dish);
+
 }
