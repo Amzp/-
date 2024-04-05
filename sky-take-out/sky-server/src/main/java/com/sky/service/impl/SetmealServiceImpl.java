@@ -2,11 +2,14 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Category;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * ClassName: SetmealServiceImpl
@@ -82,5 +86,30 @@ public class SetmealServiceImpl implements SetmealService {
         Page<SetmealVO> result = setmealMapper.pageQuerySetmeal(setmealPageQueryDTO);
 
         return new PageResult(result.getTotal(), result.getResult());
+    }
+
+    /**
+     * 根据id批量删除套餐信息
+     *
+     * @param ids
+     */
+    @Transactional // 开启事务，涉及到两个表（setmeal表和setmeal_dish表），需要事务保持一致性
+    @Override
+    public void deleteSetmealByIds(List<Long> ids) {
+        // 判断当前套餐是否能够删除--是否存在起售中的套餐
+        for (Long id : ids) {
+            Setmeal setmeal = setmealMapper.getById(id);
+            if (Objects.equals(setmeal.getStatus(), StatusConstant.ENABLE)){
+                // 存在起售中的套餐，不能删除
+                log.error("存在起售中的套餐，不能删除...");
+                throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
+            }
+        }
+
+        // 1. 批量删除套餐表setmeal中数据
+        setmealMapper.deleteSetmealByIds(ids);
+
+        // 2. 批量删除套餐菜品表setmeal_dish中数据
+        setmealDishMapper.deleteSetmealDishBySetmealIds(ids);
     }
 }

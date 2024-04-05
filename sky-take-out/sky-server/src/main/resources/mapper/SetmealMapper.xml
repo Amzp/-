@@ -32,4 +32,11 @@
         </where>
         order by id desc
     </select>
+
+    <delete id="deleteSetmealByIds">
+        delete from sky_take_out.setmeal where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

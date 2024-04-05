@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * ClassName: SetmealController
  * Package: com.sky.controller.admin
@@ -57,6 +59,17 @@ public class SetmealController {
         PageResult pageResult = setmealService.page(setmealPageQueryDTO);
 
         return Result.success(pageResult);
+    }
+
+
+    @DeleteMapping
+    @ApiOperation(value = "批量删除套餐", notes = "删除套餐")
+    public Result deleteSetmeal(@RequestParam List<Long> ids){
+        log.info("批量删除套餐：{}", ids);
+        // 调用service层方法删除套餐
+        setmealService.deleteSetmealByIds(ids);
+
+        return Result.success();
     }
 
 }

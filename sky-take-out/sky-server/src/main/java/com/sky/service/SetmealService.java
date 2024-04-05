@@ -4,6 +4,8 @@ import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.result.PageResult;
 
+import java.util.List;
+
 /**
  * ClassName: SetmealService
  * Package: com.sky.service
@@ -27,4 +29,10 @@ public interface SetmealService {
      * @return
      */
     PageResult page(SetmealPageQueryDTO setmealPageQueryDTO);
+
+    /**
+     *  根据id批量删除套餐信息
+     * @param ids
+     */
+    void deleteSetmealByIds(List<Long> ids);
 }
