@@ -130,4 +130,22 @@ public class DishController {
         return Result.success();
     }
 
+    /**
+     * 修改菜品售卖状态
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @ApiOperation(value = "修改菜品售卖状态", notes = "修改菜品售卖状态")
+    public Result saleStatusOfDish(@PathVariable Integer status,
+                                   @RequestParam Long id){
+        log.info("修改菜品售卖状态：status={}, id={}", status, id);
+        // 调用业务逻辑层方法，修改菜品售卖状态
+        dishService.updateSaleStatus(status, id);
+
+        // 返回成功结果
+        return Result.success();
+    }
+
 }

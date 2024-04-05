@@ -9,6 +9,7 @@ import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -72,4 +73,11 @@ public interface DishMapper {
     @AutoFill(value = OperationType.UPDATE) // 公共字段填充
     void updateDish(Dish dish);
 
+    /**
+     * 更新菜品销售状态
+     * @param status
+     * @param id
+     */
+    @Update("update sky_take_out.dish set status = #{status} where id = #{id}")
+    void updateSaleStatus(Integer status, Long id);
 }
