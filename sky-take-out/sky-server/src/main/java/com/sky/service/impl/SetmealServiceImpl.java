@@ -10,6 +10,7 @@ import com.sky.entity.Category;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
 import com.sky.exception.DeletionNotAllowedException;
+import com.sky.exception.SetmealEnableFailedException;
 import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
@@ -101,7 +102,7 @@ public class SetmealServiceImpl implements SetmealService {
 
         // 3. 将setmeal和setmealDishes封装到setmealDTO中
         SetmealVO setmealVO = new SetmealVO();
-        if (setmeal == null){
+        if (setmeal == null) {
             return null;
         }
         // 注意：在调用此方法之前，源对象(source)和目标对象(target)均不能为null。
@@ -122,7 +123,7 @@ public class SetmealServiceImpl implements SetmealService {
         // 判断当前套餐是否能够删除--是否存在起售中的套餐
         for (Long id : ids) {
             Setmeal setmeal = setmealMapper.getById(id);
-            if (Objects.equals(setmeal.getStatus(), StatusConstant.ENABLE)){
+            if (Objects.equals(setmeal.getStatus(), StatusConstant.ENABLE)) {
                 // 存在起售中的套餐，不能删除
                 log.error("存在起售中的套餐，不能删除...");
                 throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
@@ -159,8 +160,29 @@ public class SetmealServiceImpl implements SetmealService {
             // 批量插入套餐菜品表
             setmealDishMapper.insertSetmealDishes(setmealDishes);
         }
+    }
 
-
+    /**
+     * 套餐起售、停售
+     *
+     * @param status
+     * @param id
+     */
+    @Override
+    public void updateSetmealStatus(Integer status, Long id) {
+        // 1. 查询指定id的套餐信息，若套餐内存在未起售的菜品，则无法起售套餐（dish表中status=0是未起售菜品）
+        if (Objects.equals(status, StatusConstant.ENABLE)) { // 起售套餐，需要先检查状态
+            Integer zeroRow = setmealMapper.countZeroRow(id);
+            if (zeroRow > 0) {
+                log.error("存在未起售的菜品，不能起售套餐...");
+                throw new SetmealEnableFailedException(MessageConstant.SETMEAL_ENABLE_FAILED);
+            }
+        }
+        // 2. 更新套餐表setmeal中status字段，起售或停售套餐
+        // 2.1 构造一个setmeal对象，设置id和status属性
+        Setmeal setmeal = Setmeal.builder().id(id).status(status).build();
+        // 2.2 更新setmeal表的状态
+        setmealMapper.updateSetmealStatus(setmeal);
 
     }
 }
