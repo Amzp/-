@@ -19,10 +19,10 @@
             <if test="name!= null and name!= ''">
                 and d.name like concat('%',#{name},'%')
             </if>
-            <if test="categoryId!= null and categoryId!= ''">
+            <if test="categoryId!= null">
                 and d.category_id = #{categoryId}
             </if>
-            <if test="status != null and status != ''">
+            <if test="status != null">
                 and d.status = #{status}
             </if>
         </where>
@@ -43,11 +43,11 @@
         update dish
         <set>
             <if test="name!= null and name!= ''">name = #{name},</if>
-            <if test="categoryId!= null and categoryId!= ''">category_id = #{categoryId},</if>
-            <if test="price != null and price != ''">price = #{price},</if>
+            <if test="categoryId!= null">category_id = #{categoryId},</if>
+            <if test="price != null">price = #{price},</if>
             <if test="image != null and image != ''">image = #{image},</if>
             <if test="description != null and description != ''">description = #{description},</if>
-            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="status != null">status = #{status},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="updateUser != null and updateUser != ''">update_user = #{updateUser},</if>
         </set>

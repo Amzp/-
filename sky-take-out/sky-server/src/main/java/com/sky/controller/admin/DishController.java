@@ -106,6 +106,7 @@ public class DishController {
      * @return
      */
     @GetMapping("/list")
+    @ApiOperation(value = "根据分类ID查询菜品", notes = "根据分类ID查询菜品")
     public Result<List<Dish>> queryDishByCategoryId(@RequestParam Long categoryId){
         log.info("根据分类ID查询菜品：{}", categoryId);
         // 调用业务逻辑层方法，根据分类ID查询菜品
