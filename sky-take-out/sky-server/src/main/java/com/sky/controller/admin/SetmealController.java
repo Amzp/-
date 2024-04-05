@@ -5,6 +5,7 @@ import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.SetmealService;
+import com.sky.vo.SetmealVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +62,24 @@ public class SetmealController {
         return Result.success(pageResult);
     }
 
+    /**
+     * 根据id查询套餐
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    @ApiOperation(value = "根据id查询套餐", notes = "根据id查询套餐")
+    public Result<SetmealVO> getSetmealById(@PathVariable Long id) {
+        log.info("根据id查询套餐：{}", id);
+        // 调用service层方法查询套餐
+        SetmealVO setmealVO = setmealService.getById(id);
+
+        if (setmealVO == null) {
+            return Result.error("指定id的套餐不存在");
+        }
+        return Result.success(setmealVO);
+    }
+
 
     @DeleteMapping
     @ApiOperation(value = "批量删除套餐", notes = "删除套餐")
@@ -68,6 +87,16 @@ public class SetmealController {
         log.info("批量删除套餐：{}", ids);
         // 调用service层方法删除套餐
         setmealService.deleteSetmealByIds(ids);
+
+        return Result.success();
+    }
+
+    @PutMapping
+    @ApiOperation(value = "修改套餐", notes = "修改套餐")
+    public Result updateSetmeal(@RequestBody SetmealDTO setmealDTO){
+        log.info("修改套餐：{}", setmealDTO);
+        // 调用service层方法修改套餐
+        setmealService.updateSetmeal(setmealDTO);
 
         return Result.success();
     }

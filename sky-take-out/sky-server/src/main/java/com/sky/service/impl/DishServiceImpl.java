@@ -141,13 +141,17 @@ public class DishServiceImpl implements DishService {
      */
     @Override
     public DishVO queryDishByIdWithFlavors(Long id) {
-        // 1. 根据id查询菜品数据
+        // 1. 根据id查询菜品数据（id不存在时，返回一个空对象）
         Dish dish = dishMapper.getById(id);
         // 2. 根据id查询菜品口味数据
         List<DishFlavor> dishFlavors = dishFlavorMapper.getByDishId(id);
 
         // 3. 封装返回值
         DishVO dishVO = new DishVO();
+        if(dish == null){  // 菜品不存在,返回null
+            log.error("菜品不存在, id={}", id);
+            return null;
+        }
         BeanUtils.copyProperties(dish, dishVO);  // 将dish对象属性复制到dishVO对象中
         dishVO.setFlavors(dishFlavors);
         return dishVO;
@@ -194,14 +198,17 @@ public class DishServiceImpl implements DishService {
     }
 
     /**
-     * 根据id更新菜品销售状态
+     * 菜品起售、停售
      *
      * @param status
      * @param id
      */
     @Override
     public void updateSaleStatus(Integer status, Long id) {
+        // 构造一个新的Dish对象，设置id和status属性
+        Dish dish = Dish.builder().id(id).status(status).build();
+
         // 更新菜品销售状态
-        dishMapper.updateSaleStatus(status, id);
+        dishMapper.updateSaleStatus(dish);
     }
 }

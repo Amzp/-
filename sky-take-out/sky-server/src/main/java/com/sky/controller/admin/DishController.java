@@ -37,14 +37,15 @@ public class DishController {
 
     /**
      * 新增菜品
+     *
      * @param dishDTO
      * @return
      */
     @PostMapping
     @ApiOperation(value = "新增菜品", notes = "新增菜品")
     public Result addDish(@RequestBody DishDTO dishDTO
-    /*@RequestBody DishDTO dishDTO参数表示这个方法期望从请求的body中获取菜品数据，并且Spring将自动把JSON数据映射成DishDTO对象
-    * 使用@RequestBody注解时，Spring会将HTTP请求的内容区中的JSON或XML数据反序列化为Java对象，因此请求的Content-Type必须为application/json或application/xml等相应的媒体类型*/) {
+            /*@RequestBody DishDTO dishDTO参数表示这个方法期望从请求的body中获取菜品数据，并且Spring将自动把JSON数据映射成DishDTO对象
+             * 使用@RequestBody注解时，Spring会将HTTP请求的内容区中的JSON或XML数据反序列化为Java对象，因此请求的Content-Type必须为application/json或application/xml等相应的媒体类型*/) {
         log.info("新增菜品：{}", dishDTO);
 
         // 调用业务逻辑层方法，新增菜品及其口味
@@ -56,6 +57,7 @@ public class DishController {
 
     /**
      * 分页查询菜品
+     *
      * @param dishPageQueryDTO
      * @return
      */
@@ -71,12 +73,13 @@ public class DishController {
 
     /**
      * 根据ids批量删除菜品
+     *
      * @param ids
      * @return
      */
     @DeleteMapping
     @ApiOperation(value = "批量删除菜品", notes = "删除菜品")
-    public Result deleteDish(@RequestParam List<Long> ids){ // Spring MVC 会自动将这个以逗号分隔的字符串转换为 Long 类型的列表
+    public Result deleteDish(@RequestParam List<Long> ids) { // Spring MVC 会自动将这个以逗号分隔的字符串转换为 Long 类型的列表
         log.info("批量删除菜品：{}", ids);
 
         // 调用业务逻辑层方法，批量删除菜品及其口味
@@ -88,26 +91,32 @@ public class DishController {
 
     /**
      * 根据ID查询菜品
+     *
      * @param id
      * @return
      */
     @GetMapping("/{id}")
     @ApiOperation(value = "根据ID查询菜品", notes = "根据ID查询菜品")
-    public Result<DishVO> queryDishById(@PathVariable Long id){
+    public Result<DishVO> queryDishById(@PathVariable Long id) {
         log.info("根据ID查询菜品：{}", id);
         // 调用业务逻辑层方法，根据ID查询菜品及其口味
         DishVO dishVO = dishService.queryDishByIdWithFlavors(id);
+
+        if (dishVO == null) {
+            return Result.error("指定ID的菜品不存在");
+        }
         return Result.success(dishVO);
     }
 
     /**
      * 根据分类ID查询菜品
+     *
      * @param categoryId
      * @return
      */
     @GetMapping("/list")
     @ApiOperation(value = "根据分类ID查询菜品", notes = "根据分类ID查询菜品")
-    public Result<List<Dish>> queryDishByCategoryId(@RequestParam Long categoryId){
+    public Result<List<Dish>> queryDishByCategoryId(@RequestParam Long categoryId) {
         log.info("根据分类ID查询菜品：{}", categoryId);
         // 调用业务逻辑层方法，根据分类ID查询菜品
         List<Dish> dishList = dishService.queryDishByCategoryId(categoryId);
@@ -117,12 +126,13 @@ public class DishController {
 
     /**
      * 修改菜品
+     *
      * @param dishDTO
      * @return
      */
     @PutMapping
     @ApiOperation(value = "修改菜品", notes = "修改菜品")
-    public Result updateDish(@RequestBody DishDTO dishDTO){
+    public Result updateDish(@RequestBody DishDTO dishDTO) {
         log.info("修改菜品：{}", dishDTO);
         // 调用业务逻辑层方法，修改菜品及其口味
         dishService.updateDishWithFlavors(dishDTO);
@@ -132,16 +142,17 @@ public class DishController {
     }
 
     /**
-     * 修改菜品售卖状态
+     * 菜品起售、停售
+     *
      * @param status
      * @param id
      * @return
      */
     @PostMapping("/status/{status}")
-    @ApiOperation(value = "修改菜品售卖状态", notes = "修改菜品售卖状态")
+    @ApiOperation(value = "菜品起售、停售", notes = "菜品起售、停售")
     public Result saleStatusOfDish(@PathVariable Integer status,
-                                   @RequestParam Long id){
-        log.info("修改菜品售卖状态：status={}, id={}", status, id);
+                                   @RequestParam Long id) {
+        log.info("菜品起售、停售：status={}, id={}", status, id);
         // 调用业务逻辑层方法，修改菜品售卖状态
         dishService.updateSaleStatus(status, id);
 

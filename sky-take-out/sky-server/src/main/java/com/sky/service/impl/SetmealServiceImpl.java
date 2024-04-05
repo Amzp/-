@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * ClassName: SetmealServiceImpl
@@ -42,8 +43,6 @@ public class SetmealServiceImpl implements SetmealService {
     private SetmealMapper setmealMapper;
     @Autowired
     private SetmealDishMapper setmealDishMapper;
-    @Autowired
-    private CategoryMapper categoryMapper;
 
     /**
      * 保存新增的套餐信息
@@ -82,10 +81,34 @@ public class SetmealServiceImpl implements SetmealService {
     public PageResult page(SetmealPageQueryDTO setmealPageQueryDTO) {
         // 使用PageHelper分页插件进行分页查询
         PageHelper.startPage(setmealPageQueryDTO.getPage(), setmealPageQueryDTO.getPageSize());
-
         Page<SetmealVO> result = setmealMapper.pageQuerySetmeal(setmealPageQueryDTO);
 
         return new PageResult(result.getTotal(), result.getResult());
+    }
+
+    /**
+     * 根据id查询套餐信息
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public SetmealVO getById(Long id) {
+        // 1. 查询套餐表setmeal中数据
+        Setmeal setmeal = setmealMapper.getById(id);
+        // 2. 查询套餐菜品表setmeal_dish中数据
+        List<SetmealDish> setmealDishes = setmealDishMapper.getBySetmealId(id);
+
+        // 3. 将setmeal和setmealDishes封装到setmealDTO中
+        SetmealVO setmealVO = new SetmealVO();
+        if (setmeal == null){
+            return null;
+        }
+        // 注意：在调用此方法之前，源对象(source)和目标对象(target)均不能为null。
+        BeanUtils.copyProperties(setmeal, setmealVO); // 将setmeal中的属性值拷贝到setmealVO对象中
+        setmealVO.setSetmealDishes(setmealDishes); // 将setmealDishes集合拷贝到setmealVO对象中
+
+        return setmealVO;
     }
 
     /**
@@ -108,8 +131,36 @@ public class SetmealServiceImpl implements SetmealService {
 
         // 1. 批量删除套餐表setmeal中数据
         setmealMapper.deleteSetmealByIds(ids);
-
         // 2. 批量删除套餐菜品表setmeal_dish中数据
         setmealDishMapper.deleteSetmealDishBySetmealIds(ids);
+    }
+
+    /**
+     * 修改套餐信息
+     *
+     * @param setmealDTO
+     */
+    @Transactional // 开启事务，涉及到两个表（setmeal表和setmeal_dish表），需要事务保持一致性
+    @Override
+    public void updateSetmeal(SetmealDTO setmealDTO) {
+        // 1. 更新套餐表setmeal中数据
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO, setmeal); // 将setmealDTO中的属性值拷贝到setmeal对象中
+        setmealMapper.updateSetmeal(setmeal);
+
+        // 2. 更新套餐菜品表setmeal_dish中数据
+        // 2.1 先删除原有的套餐菜品信息
+        setmealDishMapper.deleteSetmealDishBySetmealId(setmeal.getId());
+        // 2.2 再插入新的套餐菜品信息
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
+        if (setmealDishes != null && !setmealDishes.isEmpty()) {
+            // 遍历setmealDishes集合，为每一个套餐菜品对象设置setmealId属性
+            setmealDishes.forEach(setmealDish -> setmealDish.setSetmealId(setmeal.getId()));
+            // 批量插入套餐菜品表
+            setmealDishMapper.insertSetmealDishes(setmealDishes);
+        }
+
+
+
     }
 }

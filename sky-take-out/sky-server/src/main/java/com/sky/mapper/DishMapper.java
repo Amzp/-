@@ -57,7 +57,7 @@ public interface DishMapper {
      * 根据主键id删除菜品
      * @param id
      */
-    @Delete("delete from dish where id = #{id}")
+    @Delete("delete from sky_take_out.dish where id = #{id}")
     void deleteDishById(Long id);
 
     /**
@@ -74,10 +74,12 @@ public interface DishMapper {
     void updateDish(Dish dish);
 
     /**
-     * 更新菜品销售状态
-     * @param status
-     * @param id
+     * 菜品起售、停售
+     * @param dish
      */
-    @Update("update sky_take_out.dish set status = #{status} where id = #{id}")
-    void updateSaleStatus(Integer status, Long id);
+    @Update("update sky_take_out.dish set " +
+            "status = #{status}, update_time = #{updateTime}, update_user = #{updateUser} " +
+            "where id = #{id}")
+    @AutoFill(value = OperationType.UPDATE) // 公共字段填充（updateTime,updateUser）
+    void updateSaleStatus(Dish dish);
 }
