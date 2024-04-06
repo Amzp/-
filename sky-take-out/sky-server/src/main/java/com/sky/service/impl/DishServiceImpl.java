@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,10 +45,8 @@ public class DishServiceImpl implements DishService {
 
     @Autowired
     private DishMapper dishMapper;
-
     @Autowired // 服务层的实现类中使用@Autowired来自动注入这个mapper的实现
     private DishFlavorMapper dishFlavorMapper;
-
     @Autowired
     private SetmealDishMapper setmealDishMapper;
 
@@ -210,5 +209,29 @@ public class DishServiceImpl implements DishService {
 
         // 更新菜品销售状态
         dishMapper.updateSaleStatus(dish);
+    }
+
+    /**
+     * C端-根据分类id查询菜品
+     * @param dish
+     * @return
+     */
+    public List<DishVO> listWithFlavor(Dish dish) {
+        List<Dish> dishList = dishMapper.getByCategoryId(dish.getCategoryId());
+
+        List<DishVO> dishVOList = new ArrayList<>();
+
+        for (Dish d : dishList) {
+            DishVO dishVO = new DishVO();
+            BeanUtils.copyProperties(d,dishVO);
+
+            //根据菜品id查询对应的口味
+            List<DishFlavor> flavors = dishFlavorMapper.getByDishId(d.getId());
+
+            dishVO.setFlavors(flavors);
+            dishVOList.add(dishVO);
+        }
+
+        return dishVOList;
     }
 }

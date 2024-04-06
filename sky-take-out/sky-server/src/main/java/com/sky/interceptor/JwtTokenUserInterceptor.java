@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 @Slf4j
-public class JwtTokenAdminInterceptor implements HandlerInterceptor {
+public class JwtTokenUserInterceptor implements HandlerInterceptor {
 
     @Autowired
     private JwtProperties jwtProperties;
@@ -36,25 +36,24 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println("当前线程的id：" + Thread.currentThread().getId());
 
-        //判断当前拦截到的是Controller的方法还是其他资源
+        // 判断当前拦截到的是Controller的方法还是其他资源
         if (!(handler instanceof HandlerMethod)) {
-            //当前拦截到的不是动态方法，直接放行
+            // 当前拦截到的不是动态方法，直接放行
             return true;
         }
 
         //1、从请求头中获取令牌
-        String token = request.getHeader(jwtProperties.getAdminTokenName());
+        String token = request.getHeader(jwtProperties.getUserTokenName());
 
         //2、校验令牌
         try {
-            log.info("开始执行管理端的jwt校验:{}", token);
-            Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
-            Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
-            log.info("当前员工id：{}", empId);
-            /*将从 JWT 声明中获得的员工ID（empId）设置到 BaseContext 的线程局部变量中。
-            这样就将员工ID与当前线程相关联，以便后续的代码可以方便地访问和使用这个员工ID。
+            log.info("开始执行用户端的jwt校验:{}", token);
+            Claims claims = JwtUtil.parseJWT(jwtProperties.getUserSecretKey(), token);
+            Long userId = Long.valueOf(claims.get(JwtClaimsConstant.USER_ID).toString());
+            log.info("当前用户id：{}", userId);
+            /* 将从 JWT 声明中获得的用户ID（userId）设置到 BaseContext 的线程局部变量中，将用户ID与当前线程相关联，以便后续的代码可以方便地访问和使用这个用户ID。
             这种模式在 Web 应用程序中常常用于跟踪当前登录用户的会话信息或权限信息等*/
-            BaseContext.setCurrentId(empId);
+            BaseContext.setCurrentId(userId);
 
             //3、通过，放行
             return true;

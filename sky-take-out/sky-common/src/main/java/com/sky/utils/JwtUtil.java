@@ -4,13 +4,14 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
+
 /**
- *JSON Web Token (JWT) 是一种用于在网络应用间安全地传递声明的开放标准（RFC 7519）。JWT被广泛用于身份验证和信息交换，特别是在单点登录（SSO）场景中。
+ * JSON Web Token (JWT) 是一种用于在网络应用间安全地传递声明的开放标准（RFC 7519）。JWT被广泛用于身份验证和信息交换，特别是在单点登录（SSO）场景中。
  * JWT 使用场景
- * 常见的使用场景包括：
  * 身份验证：用户登录成功后，服务器生成一个JWT，在将其发送给客户端。客户端以后的每次请求都携带JWT，服务器通过验证JWT的签名信息来验证用户身份。
  * 用户授权：JWT也经常用于传递用户的授权信息，以决定用户能否访问某些资源。
  * 优点
@@ -65,5 +66,4 @@ public class JwtUtil {
                 .parseClaimsJws(token).getBody();
         return claims;
     }
-
 }

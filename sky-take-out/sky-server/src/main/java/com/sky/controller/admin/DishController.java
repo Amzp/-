@@ -90,34 +90,34 @@ public class DishController {
 
 
     /**
-     * 根据ID查询菜品
+     * 根据id查询菜品
      *
      * @param id
      * @return
      */
     @GetMapping("/{id}")
-    @ApiOperation(value = "根据ID查询菜品", notes = "根据ID查询菜品")
+    @ApiOperation(value = "根据id查询菜品", notes = "根据id查询菜品")
     public Result<DishVO> queryDishById(@PathVariable Long id) {
-        log.info("根据ID查询菜品：{}", id);
+        log.info("根据id查询菜品：{}", id);
         // 调用业务逻辑层方法，根据ID查询菜品及其口味
         DishVO dishVO = dishService.queryDishByIdWithFlavors(id);
 
         if (dishVO == null) {
-            return Result.error("指定ID的菜品不存在");
+            return Result.error("指定id的菜品不存在");
         }
         return Result.success(dishVO);
     }
 
     /**
-     * 根据分类ID查询菜品
+     * 根据分类id查询菜品
      *
      * @param categoryId
      * @return
      */
     @GetMapping("/list")
-    @ApiOperation(value = "根据分类ID查询菜品", notes = "根据分类ID查询菜品")
+    @ApiOperation(value = "根据分类id查询菜品", notes = "根据分类id查询菜品")
     public Result<List<Dish>> queryDishByCategoryId(@RequestParam Long categoryId) {
-        log.info("根据分类ID查询菜品：{}", categoryId);
+        log.info("根据分类id查询菜品：{}", categoryId);
         // 调用业务逻辑层方法，根据分类ID查询菜品
         List<Dish> dishList = dishService.queryDishByCategoryId(categoryId);
 

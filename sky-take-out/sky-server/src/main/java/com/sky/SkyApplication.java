@@ -25,7 +25,6 @@ public class SkyApplication {
             4.执行Spring Boot的自动配置（Auto-configuration）过程，例如加载默认的配置、自动扫描注册bean等。
             5.在服务器上启动Spring Web容器（比如Tomcat）。*/
         SpringApplication.run(SkyApplication.class, args);
-        log.info("SkyApplication serve started");
-        log.info("server started");
+        log.info("SkyApplication started successfully：SkyApplication已成功启动");
     }
 }
