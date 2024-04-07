@@ -11,9 +11,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * ClassName: DishController
@@ -34,6 +36,8 @@ public class DishController {
 
     @Autowired
     private DishService dishService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 新增菜品
@@ -50,6 +54,10 @@ public class DishController {
 
         // 调用业务逻辑层方法，新增菜品及其口味
         dishService.addDishWithFlavors(dishDTO);
+        // 清除redis缓存数据
+        log.info("清除redis缓存数据...");
+        String key = "dish_" + dishDTO.getCategoryId();
+        redisTemplate.delete(key);
 
         // 返回成功结果
         return Result.success();
@@ -84,6 +92,9 @@ public class DishController {
 
         // 调用业务逻辑层方法，批量删除菜品及其口味
         dishService.deleteDishBatch(ids);
+
+        // 将所有的菜品缓存数据清理掉，所有以dish_开头的redis缓存数据都会被清理掉
+        clearRedisCache("dish_*");
 
         return Result.success();
     }
@@ -137,6 +148,8 @@ public class DishController {
         // 调用业务逻辑层方法，修改菜品及其口味
         dishService.updateDishWithFlavors(dishDTO);
 
+        // 清除redis缓存数据
+        clearRedisCache("dish_*");
         // 返回成功结果
         return Result.success();
     }
@@ -156,8 +169,20 @@ public class DishController {
         // 调用业务逻辑层方法，修改菜品售卖状态
         dishService.updateSaleStatus(status, id);
 
+        // 清除redis缓存数据
+        clearRedisCache("dish_*");
+
         // 返回成功结果
         return Result.success();
     }
 
+    /**
+     * 清除redis缓存数据
+     * @param pattern
+     */
+    private void clearRedisCache(String pattern) {
+        log.info("清除所有菜品redis缓存数据...");
+        Set keys = redisTemplate.keys(pattern);
+        redisTemplate.delete(keys);
+    }
 }
