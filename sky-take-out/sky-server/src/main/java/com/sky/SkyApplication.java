@@ -3,6 +3,7 @@ package com.sky;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 /*@SpringBootApplication 是一个注解，用于标识一个主程序类（Main class）是Spring Boot应用程序的入口点和配置类。
     这个注解整合了多个其他注解，包括 @Configuration、@EnableAutoConfiguration 和 @ComponentScan。这意味着使用 @SpringBootApplication 注解等同于使用这三个注解。
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
     这个注解简化了Spring应用程序的配置，并且是使用Spring Boot创建新应用程序的推荐方式。*/
 @SpringBootApplication
 @EnableTransactionManagement //开启注解方式的事务管理
+@EnableCaching //开启注解方式的缓存管理
 @Slf4j
 public class SkyApplication {
     public static void main(String[] args) {
