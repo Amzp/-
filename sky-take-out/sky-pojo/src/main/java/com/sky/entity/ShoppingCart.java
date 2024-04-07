@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
+@Accessors(chain = true) //支持链式调用
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShoppingCart implements Serializable {

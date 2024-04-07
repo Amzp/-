@@ -23,7 +23,7 @@ public interface SetmealMapper {
      * @param id
      * @return
      */
-    @Select("select count(id) from setmeal where category_id = #{categoryId}")
+    @Select("select count(id) from sky_take_out.setmeal where category_id = #{categoryId}")
     Integer countByCategoryId(Long id);
 
     /**
@@ -31,8 +31,8 @@ public interface SetmealMapper {
      *
      * @param setmeal
      */
-    @AutoFill(value = OperationType.INSERT)
     // 公共字段填充
+    @AutoFill(value = OperationType.INSERT)
     void insertSetmeal(Setmeal setmeal); // 需要主键（id）回显，自定义sql语句
 
     /**
@@ -48,7 +48,7 @@ public interface SetmealMapper {
      * @param id
      * @return
      */
-    @Select("select * from setmeal where id = #{id}")
+    @Select("select * from sky_take_out.setmeal where id = #{id}")
     Setmeal getById(Long id);
 
     /**
@@ -63,8 +63,8 @@ public interface SetmealMapper {
      *
      * @param setmeal
      */
-    @AutoFill(value = OperationType.UPDATE)
     // 公共字段填充
+    @AutoFill(value = OperationType.UPDATE)
     void updateSetmeal(Setmeal setmeal);
 
     /**
@@ -74,9 +74,9 @@ public interface SetmealMapper {
      * @return 停售的菜品数
      */
     @Select("select count(0)" +
-            "from setmeal as s " +
-            "         left join setmeal_dish as sd on s.id = sd.setmeal_id " +
-            "         left join dish as d on sd.dish_id = d.id " +
+            "from sky_take_out.setmeal as s " +
+            "         left join sky_take_out.setmeal_dish as sd on s.id = sd.setmeal_id " +
+            "         left join sky_take_out.dish as d on sd.dish_id = d.id " +
             "where s.id = #{id} " +
             "  and d.status = 0 ")
     Integer countZeroRow(Long id);
@@ -89,11 +89,13 @@ public interface SetmealMapper {
     @Update("update sky_take_out.setmeal set " +
             "status = #{status}, update_time = #{updateTime}, update_user = #{updateUser} " +
             "where id = #{id}")
-    @AutoFill(value = OperationType.UPDATE) // 公共字段填充
+    // 公共字段填充
+    @AutoFill(value = OperationType.UPDATE)
     void updateSetmealStatus(Setmeal setmeal);
 
     /**
      * 动态条件查询套餐
+     *
      * @param setmeal
      * @return
      */
@@ -101,11 +103,12 @@ public interface SetmealMapper {
 
     /**
      * 根据套餐id查询菜品选项
+     *
      * @param setmealId
      * @return
      */
     @Select("select sd.name, sd.copies, d.image, d.description " +
-            "from setmeal_dish sd left join dish d on sd.dish_id = d.id " +
+            "from sky_take_out.setmeal_dish sd left join sky_take_out.dish d on sd.dish_id = d.id " +
             "where sd.setmeal_id = #{setmealId}")
     List<DishItemVO> getDishItemBySetmealId(Long setmealId);
 }
