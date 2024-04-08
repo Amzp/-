@@ -11,12 +11,9 @@ import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * ClassName: OrderController
@@ -52,7 +49,7 @@ public class OrderController {
     }
 
     /**
-     * 订单支付
+     * 用户订单支付
      *
      * @param ordersPaymentDTO
      * @return
@@ -67,7 +64,7 @@ public class OrderController {
     }
 
     /**
-     * 历史订单查询
+     * 用户历史订单查询
      */
     @GetMapping("/historyOrders")
     @ApiOperation(value = "历史订单查询", notes = "历史订单查询")
@@ -81,7 +78,7 @@ public class OrderController {
     }
 
     /**
-     * 查询订单详情
+     * 用户查询订单详情
      */
     @GetMapping("/orderDetail/{id}")
     @ApiOperation("查询订单详情")
@@ -92,26 +89,26 @@ public class OrderController {
     }
 
     /**
-     * 取消订单
+     * 用户取消订单
      */
     @PutMapping("/cancel/{id}")
-    @ApiOperation("取消订单")
+    @ApiOperation("用户取消订单")
     public Result cancel(@PathVariable("id") Long id) {
-        log.info("取消订单：订单id = {}", id);
-        orderService.cancel(id);
-        log.info("订单{} 已取消", id);
+        log.info("用户取消订单：订单id = {}", id);
+        orderService.userCancel(id);
+        log.info("用户订单{} 已取消", id);
         return Result.success();
     }
 
     /**
-     * 再来一单
+     * 用户再来一单
      */
     @PostMapping("/repetition/{id}")
-    @ApiOperation("再来一单")
+    @ApiOperation("用户再来一单")
     public Result repetition(@PathVariable("id") Long id) {
-        log.info("再来一单：订单id = {}", id);
+        log.info("用户再来一单：订单id = {}", id);
         orderService.repetition(id);
-        log.info("订单{}：再来一单成功", id);
+        log.info("用户订单{}：再来一单成功", id);
         return Result.success();
     }
 }
