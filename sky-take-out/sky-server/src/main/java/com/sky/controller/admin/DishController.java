@@ -73,9 +73,8 @@ public class DishController {
     @ApiOperation(value = "分页查询菜品", notes = "分页查询菜品")
     public Result<PageResult> pageDish(@ModelAttribute DishPageQueryDTO dishPageQueryDTO) {
         log.info("分页查询菜品：{}", dishPageQueryDTO);
-
+        // 调用业务逻辑层方法，分页查询菜品及其口味
         PageResult pageResult = dishService.pageQueryDish(dishPageQueryDTO);
-
         return Result.success(pageResult);
     }
 

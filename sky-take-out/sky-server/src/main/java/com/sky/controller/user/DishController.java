@@ -23,7 +23,6 @@ import java.util.List;
 public class DishController {
     @Autowired
     private DishService dishService;
-
     @Autowired
     private RedisTemplate redisTemplate;
 
