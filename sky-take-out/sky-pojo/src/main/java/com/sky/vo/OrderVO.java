@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+// OrderVO继承了Orders类，并添加了orderDishes和orderDetailList属性
 public class OrderVO extends Orders implements Serializable {
 
     //订单菜品信息
