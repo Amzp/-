@@ -1,4 +1,4 @@
-package com.sky.controller.admin;
+package com.sky.controller.user;
 
 import com.sky.result.Result;
 import io.swagger.annotations.Api;
@@ -17,31 +17,16 @@ import org.springframework.web.bind.annotation.*;
  * @Create 2024/4/6 下午12:14
  * @Version 1.0
  */
-@RestController("adminShopController")
-@RequestMapping("/admin/shop")
+@RestController("userShopController") // 有多个相同类型的控制器需要区分时，给这个控制器指定了一个特定的Bean名称。
+@RequestMapping("/user/shop")
 @Api(tags = "店铺操作接口")
 @Slf4j
-public class shopController {
+public class ShopController {
 
     @Autowired
     private RedisTemplate redisTemplate;
 
     public final static String SHOP_STATUS = "SHOP_STATUS";
-
-    /**
-     * 设置营业状态
-     *
-     * @param status
-     * @return
-     */
-    @PutMapping("/{status}")
-    @ApiOperation(value = "设置营业状态", notes = "设置营业状态，1-营业，0-打烊")
-    public Result setStatus(@PathVariable Integer status) {
-        log.info("设置店铺营业状态：{}", status == 1 ? "营业" : "打烊");
-        redisTemplate.opsForValue().set(SHOP_STATUS, status);
-
-        return Result.success();
-    }
 
     /**
      * 获取营业状态
