@@ -3,6 +3,7 @@ package com.sky.mapper;
 import com.github.pagehelper.Page;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
+import com.sky.vo.OrderStatisticsVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -51,4 +52,18 @@ public interface OrderMapper {
      */
     @Select("select * from sky_take_out.orders where id=#{id}")
     Orders getById(Long id);
+
+    /**
+     * 统计订单数量
+     *
+     * @return
+     */
+    @Select("""
+            select sum(IF(status = 2, 1, 0)) as toBeConfirmed,
+                   sum(IF(status = 3, 1, 0)) as confirmed,
+                   sum(if(status = 4, 1, 0)) as deliveryInProgress
+            from sky_take_out.orders
+            where status in (2, 3, 4)
+            """)
+    OrderStatisticsVO statistics();
 }

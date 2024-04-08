@@ -13,6 +13,7 @@
                 #{rejectionReason}, #{cancelTime}, #{estimatedDeliveryTime}, #{deliveryStatus}, #{deliveryTime},
                 #{packAmount}, #{tablewareNumber}, #{tablewareStatus})
     </insert>
+
     <update id="update" parameterType="com.sky.entity.Orders">
         update orders
         <set>
