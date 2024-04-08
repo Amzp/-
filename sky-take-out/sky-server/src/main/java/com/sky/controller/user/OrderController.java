@@ -90,4 +90,28 @@ public class OrderController {
         OrderVO orderVO = orderService.orderDetail(id);
         return Result.success(orderVO);
     }
+
+    /**
+     * 取消订单
+     */
+    @PutMapping("/cancel/{id}")
+    @ApiOperation("取消订单")
+    public Result cancel(@PathVariable("id") Long id) {
+        log.info("取消订单：订单id = {}", id);
+        orderService.cancel(id);
+        log.info("订单{} 已取消", id);
+        return Result.success();
+    }
+
+    /**
+     * 再来一单
+     */
+    @PostMapping("/repetition/{id}")
+    @ApiOperation("再来一单")
+    public Result repetition(@PathVariable("id") Long id) {
+        log.info("再来一单：订单id = {}", id);
+        orderService.repetition(id);
+        log.info("订单{}：再来一单成功", id);
+        return Result.success();
+    }
 }

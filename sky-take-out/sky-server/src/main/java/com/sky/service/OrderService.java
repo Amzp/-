@@ -50,4 +50,16 @@ public interface OrderService {
      * @return
      */
     PageResult historyOrders(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    /**
+     * 取消订单
+     * @param id
+     */
+    void cancel(Long id);
+
+    /**
+     * 再来一单
+     * @param id
+     */
+    void repetition(Long id);
 }
