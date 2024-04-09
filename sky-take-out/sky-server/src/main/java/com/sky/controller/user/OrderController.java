@@ -111,4 +111,19 @@ public class OrderController {
         log.info("用户订单{}：再来一单成功", id);
         return Result.success();
     }
+
+    /**
+     * 用户催单
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/reminder/{id}")
+    @ApiOperation("用户催单")
+    public Result reminder(@PathVariable("id") Long id) {
+        log.info("用户催单：订单id = {}", id);
+        orderService.reminder(id);
+        log.info("用户订单{}：催单成功", id);
+        return Result.success();
+    }
 }

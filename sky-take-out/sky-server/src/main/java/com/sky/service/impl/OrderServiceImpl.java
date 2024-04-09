@@ -171,7 +171,7 @@ public class OrderServiceImpl implements OrderService {
                 .build();
         orderMapper.update(orders);
 
-        // 通过websocker向客户端推送支付成功消息
+        // 通过websocker向用户端推送来单提醒消息
         Map map = new HashMap();
         map.put("type", 1); // 1. 来单提醒  2. 客户催单
         map.put("orderId", orders.getId());
@@ -621,5 +621,30 @@ public class OrderServiceImpl implements OrderService {
             //配送距离超过5000米
             throw new OrderBusinessException("超出配送范围");
         }
+    }
+
+    /**
+     * 用户端--订单催单
+     *
+     * @param id
+     */
+    @Override
+    public void reminder(Long id) {
+        // 1. 根据id查询订单
+        Orders ordersDB = orderMapper.getById(id);
+
+        // 2. 校验订单存在
+        if (ordersDB == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        // 通过websocker向用户端推送客户催单
+        Map map = new HashMap();
+        map.put("type", 2); // 1. 来单提醒  2. 客户催单
+        map.put("orderId", id);
+        map.put("content", "订单号：" + ordersDB.getNumber());
+
+        String jsonString = JSON.toJSONString(map); // 将map对象转换为json字符串
+        webSocketServer.sendToAllClient(jsonString);
     }
 }
