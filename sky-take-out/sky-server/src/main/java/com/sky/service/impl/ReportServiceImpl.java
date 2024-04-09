@@ -1,5 +1,6 @@
 package com.sky.service.impl;
 
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * ClassName: ReportServiceImpl
@@ -212,7 +214,26 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public SalesTop10ReportVO getSalesTop10(LocalDate begin, LocalDate end) {
-        return null;
+        LocalDateTime beginTime = LocalDateTime.of(begin, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(end, LocalTime.MAX);
+
+        List<GoodsSalesDTO> salesTop10 = orderMapper.getSalesTop10(beginTime, endTime);
+        List<String> names = salesTop10.stream()
+                .map(GoodsSalesDTO::getName)
+                .collect(Collectors.toList());
+        String nameList = StringUtils.join(names, ",");
+
+        List<Integer> numbers = salesTop10.stream()
+                .map(GoodsSalesDTO::getNumber)
+                .collect(Collectors.toList());
+        String numberList = StringUtils.join(numbers, ",");
+
+        //封装返回结果数据
+        return SalesTop10ReportVO
+                .builder()
+                .nameList(nameList)
+                .numberList(numberList)
+                .build();
     }
 
     /**
