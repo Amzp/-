@@ -151,21 +151,20 @@ public class OrderServiceImpl implements OrderService {
         OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);
         vo.setPackageStr(jsonObject.getString("package"));
 
-        // 替代微信支付成功后的数据库订单状态更新，直接在这里更新了
         // 根据订单号查询当前用户的该订单
+        // 替代微信支付成功后的数据库订单状态更新，直接在这里更新了
         Orders ordersDB = orderMapper.getByNumberAndUserId(ordersPaymentDTO.getOrderNumber(), userId);
+        // 根据address_book_id查询收货地址，拼接成字符串
+        AddressBook addressBook = addressBookMapper.getById(ordersDB.getAddressBookId());
+        String address = addressBook.getProvinceName() + addressBook.getCityName() + addressBook.getDistrictName() + addressBook.getDetail();
 
         // 根据订单id更新订单的状态、支付方式、支付状态、结账时间
-//        Orders orders=new Orders();
-//        orders.setId(ordersDB.getId());
-//        orders.setStatus(Orders.TO_BE_CONFIRMED);
-//        orders.setPayStatus(Orders.PAID);
-//        orders.setCheckoutTime(LocalDateTime.now());
         Orders orders = Orders.builder()
                 .id(ordersDB.getId())
                 .status(Orders.TO_BE_CONFIRMED) // 订单状态，待接单
                 .payStatus(Orders.PAID) // 支付状态，已支付
                 .checkoutTime(LocalDateTime.now()) // 更新支付时间
+                .address(address) // 收货地址
                 .build();
         orderMapper.update(orders);
         return vo;

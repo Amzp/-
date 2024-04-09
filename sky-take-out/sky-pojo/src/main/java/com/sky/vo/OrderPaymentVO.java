@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -19,5 +18,4 @@ public class OrderPaymentVO implements Serializable {
     private String timeStamp; //时间戳
     private String signType; //签名算法
     private String packageStr; //统一下单接口返回的 prepay_id 参数值
-
 }
