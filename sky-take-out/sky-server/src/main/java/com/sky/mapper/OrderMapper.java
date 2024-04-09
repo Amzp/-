@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ClassName: OrderMapper
@@ -79,4 +80,12 @@ public interface OrderMapper {
      */
     @Select("select * from sky_take_out.orders where status = #{status} and order_time < (#{orderTime})")
     List<Orders> getByStatusAndOrderTimeLT(Integer status, LocalDateTime orderTime);
+
+    /**
+     * 根据动态条件统计营业额数据
+     *
+     * @param map
+     * @return
+     */
+    Double sumTurnoverByDate(Map map);
 }
